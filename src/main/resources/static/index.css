@@ -1,0 +1,73 @@
+
+.placement {
+    padding-top: 20px;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+p {
+    color: red;
+}
+
+
+/*p {
+    color: red;
+    width: auto;
+}
+
+div {
+    padding-topp: 10px;
+}
+
+.orderBox{
+    padding: 20px;
+    width: 500px;
+    border: solid black 2px;
+    border-radius: 10px;
+    background-color: lightblue;
+}
+
+.labelSize{
+    box-sizing: content-box;
+    width: 75px;
+    height: auto;
+}
+
+.inputAntall{
+    width: 45px;
+}
+
+.button{
+    border-radius: 5px;
+    padding: 5px;
+    margin-top: 10px;
+}
+
+.printBox{
+    margin: 20px;
+}
+
+table{
+    border: solid black 2px;
+    background-color: lightgreen;
+}
+
+tr{
+    border: solid black 1px;
+}
+
+th, td{
+    border: solid black 1px;
+    padding: 10px;
+}
+ */

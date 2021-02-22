@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DATA1700 - Oblig 2</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+            crossorigin="anonymous"></script>
+
+    <script type="application/javascript">
+
+        function addOrder() {
+
+            $("#antallError").text("")
+            $("#fornavnError").text("")
+            $("#etternavnError").text("")
+            $("#telefonnrError").text("")
+            $("#epostError").text("")
+
+
+            const film = $("#film").val();
+            const antall = $("#antall").val();
+            const fornavn = $("#fornavn").val();
+            const etternavn = $("#etternavn").val();
+            const telefonnr = $("#telefonnr").val();
+            const epost = $("#epost").val();
+
+            errorExist = false;
+
+            if (antall === "") {
+                $("#antallError").text("Feltet kan ikke være tomt ")
+                errorExist = true;
+            } else if (isNaN(parseInt(antall))) {
+                $("#antallError").text("Antall må være ett tall")
+                errorExist = true;
+            }
+
+            if (fornavn === "") {
+                $("#fornavnError").text("Feltet kan ikke være tomt");
+                errorExist = true;
+            }
+
+            if (etternavn === "") {
+                $("#etternavnError").text("Feltet kan ikke være tomt");
+                errorExist = true;
+            }
+
+            if (telefonnr === "") {
+                $("#telefonnrError").text("Feltet kan ikke være tomt");
+                errorExist = true;
+            } else if (isNaN(parseInt(telefonnr))) {
+                $("#telefonnrError").text("Telefonnr må være tall");
+                errorExist = true;
+            }
+
+            if (epost === "") {
+                $("#epostError").text("Feltet kan ikke være tomt")
+                errorExist = true;
+            }
+
+            const Ticket = {
+                film: film,
+                antall: antall,
+                fornavn: fornavn,
+                etternavn: etternavn,
+                telefonnr: telefonnr,
+                epost: epost,
+            }
+
+            if (!errorExist) {
+                $.post("/add", Ticket, function () {
+                    getAllTickets();
+                })
+                document.forms[0].reset() // Brukt for å wipe input feltene
+
+            }
+        }
+
+        function getAllTickets() {
+            $.get("/getAll", function (data) {
+                printTicket(data);
+            })
+        }
+
+        function printTicket(tickets) {
+            let ut = "<table class='table'<tr>" +
+                "<th>Film</th><th>Antall</th><th>Navn</th><th>Epost</th><th>Tlf. nummer</th>" +
+                "</tr>";
+
+            for (const Ticket of tickets) {
+                ut += "<tr>";
+                ut += "<td>" + Ticket.film + "</td><td>" + Ticket.antall + "</td><td>" + Ticket.fornavn + " " + Ticket.etternavn +
+                    "</td><td>" + Ticket.epost + "</td><td>" + Ticket.telefonnr + "</td>";
+                ut += "</tr>";
+            }
+            ut += "</table>"
+            $("#dataOversikt").html(ut);
+        }
+
+        function generateDeleteButton() {
+            ut = '<button type="button" onclick="deleteTickets()" class="btn btn-secondary btn-lg btn-block">Slett billetter</button>';
+            $("#buttonGenerate").html(ut);
+        }
+
+        function deleteTickets() {
+            $.post("/delete", function () {
+                getAllTickets();
+            })
+        }
+
+    </script>
+
+</head>
+<body>
+
+<div class="container-md shadow p-3 mb-5 bg-white rounded">
+
+    <h1>Bestilling av kinobiletter</h1> <br>
+    <form class="main-form">
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="film">Velg film</label>
+            <select id="film" class="form-select">
+                <option></option>
+                <option>Ju-On</option>
+                <option>Sinister</option>
+                <option>Toy Terror</option>
+                <option>The Conjouring</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="antall">Antall</label>
+            <input id="antall" type="number" class="form-control col-xs-3"/>
+            <p id="antallError"></p>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="fornavn">Fornavn</label>
+                    <input id="fornavn" type="text" class="form-control">
+                    <p id="fornavnError"></p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label for="etternavn">Etternavn</label>
+                    <input id="etternavn" type="text" class="form-control">
+                    <p id="etternavnError"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class=" form-group">
+            <label for="telefonnr">Telefonnr</label><input id="telefonnr" type="number" class="form-control">
+            <p id="telefonnrError"></p>
+        </div>
+
+        <div class=" form-group">
+            <label for="epost">Epost</label><input id="epost" type="text" class="form-control">
+            <p id="epostError"></p>
+        </div>
+
+        <div>
+            <button type="button" onclick="addOrder(), generateDeleteButton()" class="btn btn-secondary btn-lg btn-block">Buy ticket</button>
+        </div>
+    </form>
+</div>
+
+<div class="container-md shadow p-3 mb-5 bg-white rounded">
+    <h1>Billet Oversikt</h1>
+    <div id="dataOversikt"></div>
+    <div id="buttonGenerate"></div>
+
+</div>
+
+
+</body>
+</html>
