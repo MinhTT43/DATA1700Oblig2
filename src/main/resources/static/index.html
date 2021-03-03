@@ -73,43 +73,10 @@
 
             if (!errorExist) {
                 $.post("/add", Ticket, function () {
-                    getAllTickets();
                 })
                 document.forms[0].reset() // Brukt for å wipe input feltene
-
+                window.location.href="bestilling.html";
             }
-        }
-
-        function getAllTickets() {
-            $.get("/getAll", function (data) {
-                printTicket(data);
-            })
-        }
-
-        function printTicket(tickets) {
-            let ut = "<table class='table'<tr>" +
-                "<th>Film</th><th>Antall</th><th>Navn</th><th>Epost</th><th>Tlf. nummer</th>" +
-                "</tr>";
-
-            for (const Ticket of tickets) {
-                ut += "<tr>";
-                ut += "<td>" + Ticket.film + "</td><td>" + Ticket.antall + "</td><td>" + Ticket.fornavn + " " + Ticket.etternavn +
-                    "</td><td>" + Ticket.epost + "</td><td>" + Ticket.telefonnr + "</td>";
-                ut += "</tr>";
-            }
-            ut += "</table>"
-            $("#dataOversikt").html(ut);
-        }
-
-        function generateDeleteButton() {
-            ut = '<button type="button" onclick="deleteTickets()" class="btn btn-secondary btn-lg btn-block">Slett billetter</button>';
-            $("#buttonGenerate").html(ut);
-        }
-
-        function deleteTickets() {
-            $.post("/delete", function () {
-                getAllTickets();
-            })
         }
 
     </script>
@@ -117,8 +84,25 @@
 </head>
 <body>
 
-<div class="container-md shadow p-3 mb-5 bg-white rounded">
 
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark container-fluid">
+    <a class="navbar-brand" href="index.html">
+        <img src="https://image.shutterstock.com/image-vector/minimal-home-icon-web-homepage-260nw-1719939445.jpg"
+             alt="Home" style="border-radius: 50%; max-width: 40px;">
+    </a>
+
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="bestilling.html">Bestilling</a>
+        </li>
+        <li class="nav-item">
+            <a href="index.html" class="nav-link active">Oversikt</a>
+        </li>
+    </ul>
+
+</nav>
+
+<section class="container-md shadow p-3 mb-5 bg-white rounded mt-3">
     <h1>Bestilling av kinobiletter</h1> <br>
     <form class="main-form">
         <div class="input-group mb-3">
@@ -167,17 +151,19 @@
         </div>
 
         <div>
-            <button type="button" onclick="addOrder(), generateDeleteButton()" class="btn btn-secondary btn-lg btn-block">Buy ticket</button>
+            <button type="button" onclick="addOrder()"
+                    class="btn btn-secondary btn-lg btn-block">Buy ticket
+            </button>
         </div>
     </form>
-</div>
+</section>
 
-<div class="container-md shadow p-3 mb-5 bg-white rounded">
-    <h1>Billet Oversikt</h1>
-    <div id="dataOversikt"></div>
-    <div id="buttonGenerate"></div>
+<!--<div class="container-md shadow p-3 mb-5 bg-white rounded">-->
+<!--    <h1>Billet Oversikt</h1>-->
+<!--    <div id="dataOversikt"></div>-->
+<!--    <div id="buttonGenerate"></div>-->
 
-</div>
+<!--</div>-->
 
 
 </body>
